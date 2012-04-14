@@ -5,7 +5,7 @@ require 'chrome'
 require 'configuration'
 require 'librato_updater'
 
-CHROME_PATH = '"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"'
+CHROME_PATH = '"google-chrome"'
 
 class Testify
 
@@ -31,7 +31,7 @@ class Testify
 
 end
 
-chrome_pid = Process.spawn("#{CHROME_PATH} -remote-debugging-port=9222", :pgroup => true)
+chrome_pid = Process.spawn("#{CHROME_PATH} --user-data-dir=/tmp/temp-profile -remote-debugging-port=9222", :pgroup => true)
 sleep 2
 testify = Testify.new
 
