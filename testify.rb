@@ -31,8 +31,8 @@ class Testify
 
 end
 
-chrome_pid = Process.spawn("#{CHROME_PATH} -remote-debugging-port=9222")
+chrome_pid = Process.spawn("#{CHROME_PATH} -remote-debugging-port=9222", :pgroup => true)
 sleep 2
 testify = Testify.new
 
-`kill #{chrome_pid}`
+Process.kill('-TERM', Process.getpgid(chrome_pid))
