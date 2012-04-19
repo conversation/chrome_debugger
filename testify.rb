@@ -19,10 +19,10 @@ class Testify
         onload_event:         chrome.document.onload_event,
         dom_content_event:    chrome.document.dom_content_event,
         script_payload:       chrome.document.size("Script"),
-        image_payload:        chrome.document.size("Images"),
+        image_payload:        chrome.document.size("Image"),
         stylesheet_payload:   chrome.document.size("Stylesheet"),
         script_count:         chrome.document.request_count_by_resource("Script"),
-        image_count:          chrome.document.request_count_by_resource("Images"),
+        image_count:          chrome.document.request_count_by_resource("Image"),
         stylesheet_count:     chrome.document.request_count_by_resource("Stylesheet")
       }.each {|key, value| librato_updater.queue "#{name}.#{key}", value }
     }
