@@ -15,30 +15,42 @@ class ChromeRemoteDebugger
 
   def initialize(opts = {})
     @chrome_path = find_chrome_binary
+  end
+
+  def self.open(&block)
+    chrome = ChromeRemoteDebugger.new
+    chrome.start_chrome
+    yield chrome
+  ensure
+    chrome.cleanup
+  end
+
+  def start_chrome
     @profile_dir = File.join(Dir.tmpdir, SecureRandom.hex(10))
-    @chrome_pid  = start_chrome
+    @chrome_cmd  = "#{@chrome_path} --user-data-dir=#{@profile_dir} -remote-debugging-port=9222 --no-first-run"
+    @chrome_pid  = Process.spawn(@chrome_cmd, :pgroup => true)
+
+    # TODO proper detection of a running chrome process
+    sleep 2
+    @chrome_pid
   end
 
   def load_url(url)
+    raise "call the start_chrome() method first" unless @chrome_pid
     @document = Document.new
     load(url)
   end
 
   def cleanup
-    Process.kill('-TERM', Process.getpgid(@chrome_pid))
-    sleep 3
-    FileUtils.rm_rf(@profile_dir) if File.directory?(@profile_dir)
+    if @chrome_pid
+      Process.kill('-TERM', Process.getpgid(@chrome_pid))
+      sleep 3
+      FileUtils.rm_rf(@profile_dir) if @profile_dir && File.directory?(@profile_dir)
+      @chrome_pid = nil
+    end
   end
 
   private
-
-  def start_chrome
-    chrome_pid = Process.spawn("#{@chrome_path} --user-data-dir=#{@profile_dir} -remote-debugging-port=9222 --no-first-run", :pgroup => true)
-
-    # TODO proper detection of a running chrome process
-    sleep 2
-    chrome_pid
-  end
 
   def find_chrome_binary
     path = [

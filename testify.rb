@@ -8,8 +8,7 @@ require 'librato_updater'
 librato_updater = LibratoUpdater.new
 
 Configuration.instance.config['pages'].each do |name, url|
-  chrome = ChromeRemoteDebugger.new
-  begin
+  ChromeRemoteDebugger.open do |chrome|
     chrome.load_url(url)
     {
       requests:             chrome.document.request_count,
@@ -24,8 +23,6 @@ Configuration.instance.config['pages'].each do |name, url|
     }.each {|key, value|
       librato_updater.queue("#{name}.#{key}", value)
     }
-  ensure
-    chrome.cleanup
   end
 end
 
