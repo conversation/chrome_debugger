@@ -2,12 +2,22 @@ $LOAD_PATH.unshift(File.expand_path('../config', __FILE__))
 $LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
 
 require 'chrome'
-require 'configuration'
 require 'librato_updater'
 
-librato_updater = LibratoUpdater.new
+# Config
 
-Configuration.instance.config['pages'].each do |name, url|
+LIBRATO_USER = ""
+LIBRATO_KEY  = ""
+PAGES        = {
+  homepage: 'https://theconversation.edu.au/',
+  articlepage: 'https://theconversation.edu.au/bike-lanes-economic-benefits-go-beyond-jobs-6081/'
+}
+
+# ACTION
+
+librato_updater = LibratoUpdater.new(LIBRATO_USER, LIBRATO_KEY)
+
+PAGES.each do |name, url|
   ChromeRemoteDebugger.open do |chrome|
     chrome.load_url(url)
     {
