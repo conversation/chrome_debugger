@@ -1,14 +1,12 @@
 require 'librato/metrics'
-require 'configuration'
 
 class LibratoUpdater
 
   LIBRATO_METRIC_PREFIX = "tc.frontend"
 
-  def initialize
+  def initialize(user, key)
     @queue = Librato::Metrics::Queue.new
-    config = Configuration.instance.librato
-    Librato::Metrics.authenticate config['api_user'], config['api_key']
+    Librato::Metrics.authenticate user, key
   end
 
   def queue(key, value)
