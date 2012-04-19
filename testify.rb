@@ -1,7 +1,6 @@
-$LOAD_PATH.unshift(File.expand_path('../config', __FILE__))
 $LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
 
-require 'chrome'
+require 'chrome_remote_debugger'
 require 'librato_updater'
 
 # Config
