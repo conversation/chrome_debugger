@@ -4,6 +4,7 @@ require 'json'
 require 'document'
 require 'notification'
 require 'notification_response_received'
+require 'securerandom'
 
 class ChromeRemoteDebugger
 
@@ -12,13 +13,43 @@ class ChromeRemoteDebugger
   PAGE_LOAD_WAIT = 16
   REMOTE_DEBUGGING_PORT = 9222
 
-  def initialize(url)
-    @url = url
+  def initialize(opts = {})
+    @chrome_path = find_chrome_binary
+    @profile_dir = File.join(Dir.tmpdir, SecureRandom.hex(10))
+    @chrome_pid  = start_chrome
+  end
+
+  def load_url(url)
     @document = Document.new
-    load()
+    load(url)
+  end
+
+  def cleanup
+    Process.kill('-TERM', Process.getpgid(@chrome_pid))
+    sleep 3
+    FileUtils.rm_rf(@profile_dir) if File.directory?(@profile_dir)
   end
 
   private
+
+  def start_chrome
+    chrome_pid = Process.spawn("#{@chrome_path} --user-data-dir=#{@profile_dir} -remote-debugging-port=9222 --no-first-run", :pgroup => true)
+
+    # TODO proper detection of a running chrome process
+    sleep 2
+    chrome_pid
+  end
+
+  def find_chrome_binary
+    path = [
+      "/usr/bin/google-chrome",
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    ].detect { |path|
+      File.file?(path)
+    }
+    raise "No Chrome binary found" if path.nil?
+    path
+  end
 
   def handle_data(data)
     unless data['result']
@@ -48,7 +79,7 @@ class ChromeRemoteDebugger
     end
   end
 
-  def load
+  def load(url)
     EM.run do
 
       # This is super smelly :/
@@ -75,7 +106,7 @@ class ChromeRemoteDebugger
           ws.send JSON.dump({
             id: 5,
             method: 'Page.navigate',
-            params: {url: @url}
+            params: {url: url}
           })
         end
       end
