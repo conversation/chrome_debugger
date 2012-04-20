@@ -2,5 +2,6 @@ source :rubygems
 
 gem 'eventmachine'
 gem 'faye'
-gem 'yajl-ruby'
+gem 'headless'
 gem 'librato-metrics'
+gem 'yajl-ruby'

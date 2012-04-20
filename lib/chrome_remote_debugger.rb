@@ -1,5 +1,6 @@
 require 'em-http'
 require 'faye/websocket'
+require 'headless'
 require 'json'
 require 'document'
 require 'notification'
@@ -18,11 +19,14 @@ class ChromeRemoteDebugger
   end
 
   def self.open(&block)
+    headless = Headless.new
+    headless.start
     chrome = ChromeRemoteDebugger.new
     chrome.start_chrome
     yield chrome
   ensure
     chrome.cleanup
+    headless.destroy
   end
 
   def start_chrome
