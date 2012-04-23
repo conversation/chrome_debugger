@@ -67,13 +67,13 @@ class ChromeRemoteDebugger
     path
   end
 
-  def handle_data(data)
+  def handle_data(documentUrl, data)
     unless data['result']
       case data['method']
 
       # The browser is initiating a new HTTP request
       when "Network.requestWillBeSent" then
-        if data['params']['request']['url'] == @url
+        if data['params']['request']['url'] == documentUrl
           page_request_timestamp = data['params']['timestamp'].to_f
           @document.timestamp = page_request_timestamp
         end
@@ -111,7 +111,7 @@ class ChromeRemoteDebugger
 
         ws.onmessage = lambda do |message|
           data = JSON.parse(message.data)
-          handle_data(data)
+          handle_data(url, data)
         end
 
         ws.onopen = lambda do |event|
