@@ -2,10 +2,12 @@ require 'em-http'
 require 'faye/websocket'
 require 'headless'
 require 'json'
-require 'document'
-require 'notification'
-require 'notification_response_received'
+
 require 'securerandom'
+
+require 'chrome_remote_debugger/document'
+require 'chrome_remote_debugger/notification'
+require 'chrome_remote_debugger/notification_response_received'
 
 class ChromeRemoteDebugger
 
@@ -41,7 +43,7 @@ class ChromeRemoteDebugger
 
   def load_url(url)
     raise "call the start_chrome() method first" unless @chrome_pid
-    @document = Document.new
+    @document = ChromeRemoteDebugger::Document.new
     load(url)
   end
 
@@ -87,10 +89,10 @@ class ChromeRemoteDebugger
         @document.events[:onload_fired] = data['params']['timestamp'].to_f
 
       when "Network.responseReceived" then
-        @document.network << ResponseReceived.new(data)
+        @document.network << ChromeRemoteDebugger::ResponseReceived.new(data)
 
       else
-        @document.network << Notification.new(data)
+        @document.network << ChromeRemoteDebugger::Notification.new(data)
       end
     end
   end
