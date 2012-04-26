@@ -1,7 +1,7 @@
-require 'chrome_remote_debugger/notification'
-require 'chrome_remote_debugger/notification_response_received'
+require 'chrome_debugger/notification'
+require 'chrome_debugger/notification_response_received'
 
-class ChromeRemoteDebugger
+module ChromeDebugger
   class Document
 
     attr_accessor :timestamp, :network, :events

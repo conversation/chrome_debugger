@@ -1,6 +1,6 @@
-require 'chrome_remote_debugger/notification'
+require 'chrome_debugger/notification'
 
-class ChromeRemoteDebugger
+module ChromeDebugger
   class ResponseReceived < Notification
 
     def bytes

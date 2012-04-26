@@ -1,4 +1,4 @@
-class ChromeRemoteDebugger
+module ChromeDebugger
   class Notification
 
     attr_reader :method
