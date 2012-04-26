@@ -33,8 +33,8 @@ module ChromeDebugger
       @onload_event ||= begin
                           ts = @events.select { |event|
                             event.is_a?(LoadEventFired)
-                          }.slice(0,1).map(&:timestamp).first || start_time
-                          (ts - start_time).round(3)
+                          }.slice(0,1).map(&:timestamp).first
+                          ts ? (ts - start_time).round(3) : nil
                         end
     end
 
@@ -44,8 +44,8 @@ module ChromeDebugger
       @dom_content_event ||= begin
                                ts = @events.select { |event|
                                  event.is_a?(DomContentEventFired)
-                               }.slice(0,1).map(&:timestamp).first || start_time
-                               (ts - start_time).round(3)
+                               }.slice(0,1).map(&:timestamp).first
+                               ts ? (ts - start_time).round(3) : nil
                              end
     end
 

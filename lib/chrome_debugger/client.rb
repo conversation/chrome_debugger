@@ -92,9 +92,8 @@ module ChromeDebugger
 
     def load(document)
       EM.run do
-        # This is super smelly :/
-        EM::add_timer(PAGE_LOAD_WAIT) do
-          EM.stop_event_loop
+        EM::add_periodic_timer(0.5) do
+          EM.stop_event_loop if document.onload_event
         end
 
         conn = EM::HttpRequest.new("http://localhost:#{REMOTE_DEBUGGING_PORT}/json").get
