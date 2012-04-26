@@ -7,7 +7,10 @@ require 'securerandom'
 
 require 'chrome_debugger/document'
 require 'chrome_debugger/notification'
-require 'chrome_debugger/notification_response_received'
+require 'chrome_debugger/dom_content_event_fired'
+require 'chrome_debugger/load_event_fired'
+require 'chrome_debugger/request_will_be_sent'
+require 'chrome_debugger/response_received'
 
 module ChromeDebugger
   class Client
@@ -72,27 +75,17 @@ module ChromeDebugger
     def handle_data(document, data)
       unless data['result']
         case data['method']
-
-          # The browser is initiating a new HTTP request
         when "Network.requestWillBeSent" then
-          if data['params']['request']['url'] == document.url
-            page_request_timestamp = data['params']['timestamp'].to_f
-            document.timestamp = page_request_timestamp
-          end
-
-          # DomContent Events has been fired
+          # The browser is initiating a new HTTP request
+          document.events << ChromeDebugger::RequestWillBeSent.new(data)
         when "Page.domContentEventFired" then
-          document.events[:dom_content_fired] = data['params']['timestamp'].to_f
-
-          # onLoad Event has been fired
+          document.events << ChromeDebugger::DomContentEventFired.new(data)
         when "Page.loadEventFired" then
-          document.events[:onload_fired] = data['params']['timestamp'].to_f
-
+          document.events << ChromeDebugger::LoadEventFired.new(data)
         when "Network.responseReceived" then
-          document.network << ChromeDebugger::ResponseReceived.new(data)
-
+          document.events << ChromeDebugger::ResponseReceived.new(data)
         else
-          document.network << ChromeDebugger::Notification.new(data)
+          document.events << ChromeDebugger::Notification.new(data)
         end
       end
     end
