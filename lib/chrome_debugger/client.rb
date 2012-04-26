@@ -35,9 +35,9 @@ module ChromeDebugger
       @chrome_cmd  = "#{@chrome_path} --user-data-dir=#{@profile_dir} -remote-debugging-port=9222 --no-first-run"
       @chrome_pid  = Process.spawn(@chrome_cmd, :pgroup => true)
 
-      # TODO proper detection of a running chrome process
-      sleep 2
-      @chrome_pid
+      until process_running?(@chrome_pid)
+        sleep 0.1
+      end
     end
 
     def load_url(url)
@@ -101,7 +101,7 @@ module ChromeDebugger
       EM.run do
 
         # This is super smelly :/
-        EM::add_timer PAGE_LOAD_WAIT do
+        EM::add_timer(PAGE_LOAD_WAIT) do
           stop_event_loop
         end
 
@@ -133,6 +133,13 @@ module ChromeDebugger
 
     def stop_event_loop
       EM.stop_event_loop
+    end
+
+    def process_running?(pid)
+      Process.getpgid( pid.to_i )
+      true
+    rescue Errno::ESRCH
+      false
     end
 
   end
