@@ -35,7 +35,7 @@ module ChromeDebugger
       @chrome_cmd  = "#{@chrome_path} --user-data-dir=#{@profile_dir} -remote-debugging-port=9222 --no-first-run"
       @chrome_pid  = Process.spawn(@chrome_cmd, :pgroup => true)
 
-      until process_running?(@chrome_pid)
+      until debug_port_listening?
         sleep 0.1
       end
     end
@@ -99,10 +99,9 @@ module ChromeDebugger
 
     def load(document)
       EM.run do
-
         # This is super smelly :/
         EM::add_timer(PAGE_LOAD_WAIT) do
-          stop_event_loop
+          EM.stop_event_loop
         end
 
         conn = EM::HttpRequest.new("http://localhost:#{REMOTE_DEBUGGING_PORT}/json").get
@@ -131,14 +130,10 @@ module ChromeDebugger
       end
     end
 
-    def stop_event_loop
-      EM.stop_event_loop
-    end
-
-    def process_running?(pid)
-      Process.getpgid( pid.to_i )
+    def debug_port_listening?
+      TCPSocket.new('localhost', REMOTE_DEBUGGING_PORT).close
       true
-    rescue Errno::ESRCH
+    rescue Errno::ECONNREFUSED
       false
     end
 
