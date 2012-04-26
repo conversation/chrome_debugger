@@ -34,7 +34,7 @@ PAGES.each do |name, url|
     }.each {|key, value|
       puts "#{LIBRATO_PREFIX}.#{name}.#{key}: #{value}"
     }.each { |key, value|
-      librato_queue.add("#{LIBRATO_PREFIX}.#{name}.#{key}", value)
+      librato_queue.add("#{LIBRATO_PREFIX}.#{name}.#{key}" => value)
     }
   end
 end
