@@ -12,8 +12,6 @@ require 'chrome_debugger/notification_response_received'
 module ChromeDebugger
   class Client
 
-    attr_reader :document
-
     PAGE_LOAD_WAIT = 16
     REMOTE_DEBUGGING_PORT = 9222
 
@@ -44,8 +42,9 @@ module ChromeDebugger
 
     def load_url(url)
       raise "call the start_chrome() method first" unless @chrome_pid
-      @document = ChromeDebugger::Document.new
-      load(url)
+      document = ChromeDebugger::Document.new(url)
+      load(document)
+      document
     end
 
     def cleanup
@@ -70,35 +69,35 @@ module ChromeDebugger
       path
     end
 
-    def handle_data(documentUrl, data)
+    def handle_data(document, data)
       unless data['result']
         case data['method']
 
           # The browser is initiating a new HTTP request
         when "Network.requestWillBeSent" then
-          if data['params']['request']['url'] == documentUrl
+          if data['params']['request']['url'] == document.url
             page_request_timestamp = data['params']['timestamp'].to_f
-            @document.timestamp = page_request_timestamp
+            document.timestamp = page_request_timestamp
           end
 
           # DomContent Events has been fired
         when "Page.domContentEventFired" then
-          @document.events[:dom_content_fired] = data['params']['timestamp'].to_f
+          document.events[:dom_content_fired] = data['params']['timestamp'].to_f
 
           # onLoad Event has been fired
         when "Page.loadEventFired" then
-          @document.events[:onload_fired] = data['params']['timestamp'].to_f
+          document.events[:onload_fired] = data['params']['timestamp'].to_f
 
         when "Network.responseReceived" then
-          @document.network << ChromeDebugger::ResponseReceived.new(data)
+          document.network << ChromeDebugger::ResponseReceived.new(data)
 
         else
-          @document.network << ChromeDebugger::Notification.new(data)
+          document.network << ChromeDebugger::Notification.new(data)
         end
       end
     end
 
-    def load(url)
+    def load(document)
       EM.run do
 
         # This is super smelly :/
@@ -114,7 +113,7 @@ module ChromeDebugger
 
           ws.onmessage = lambda do |message|
             data = JSON.parse(message.data)
-            handle_data(url, data)
+            handle_data(document, data)
           end
 
           ws.onopen = lambda do |event|
@@ -125,7 +124,7 @@ module ChromeDebugger
             ws.send JSON.dump({
               id: 5,
               method: 'Page.navigate',
-              params: {url: url}
+              params: {url: document.url}
             })
           end
         end

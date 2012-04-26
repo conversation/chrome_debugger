@@ -4,12 +4,14 @@ require 'chrome_debugger/notification_response_received'
 module ChromeDebugger
   class Document
 
+    attr_reader :url
     attr_accessor :timestamp, :network, :events
 
-    def initialize
+    def initialize(url)
+      @url       = url
       @timestamp = 0
-      @events = {}
-      @network = []
+      @events    = {}
+      @network   = []
     end
 
     def size(resource_type)
