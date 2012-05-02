@@ -7,6 +7,7 @@ require 'securerandom'
 
 require 'chrome_debugger/document'
 require 'chrome_debugger/notification'
+require 'chrome_debugger/data_received'
 require 'chrome_debugger/dom_content_event_fired'
 require 'chrome_debugger/load_event_fired'
 require 'chrome_debugger/request_will_be_sent'
@@ -84,6 +85,8 @@ module ChromeDebugger
           document.events << ChromeDebugger::LoadEventFired.new(data)
         when "Network.responseReceived" then
           document.events << ChromeDebugger::ResponseReceived.new(data)
+        when "Network.dataReceived" then
+          document.events << ChromeDebugger::DataReceived.new(data)
         else
           document.events << ChromeDebugger::Notification.new(data)
         end

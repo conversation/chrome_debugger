@@ -49,14 +49,41 @@ module ChromeDebugger
                              end
     end
 
-    # The number of bytes downloaded for a particular resources type.
+    # The number of bytes downloaded for a particular resource type. If the
+    # resource was gzipped during transfer then the gzipped size is reported.
     #
-    # Possible resource types: 'Script', 'Image', 'Stylesheet'
+    # The HTTP headers for the response are included in the byte count.
     #
-    def size(resource_type)
-      @events.select {|n|
-        n.is_a?(ResponseReceived) && n.resource_type == resource_type
-      }.inject(0) {|bytes_sum, n| bytes_sum + n.bytes }
+    # Possible resource types: 'Document','Script', 'Image', 'Stylesheet',
+    # 'Other'.
+    #
+    def encoded_bytes(resource_type)
+      @events.select {|e|
+        e.is_a?(ResponseReceived) && e.resource_type == resource_type
+      }.map { |e|
+        e.request_id
+      }.map { |request_id|
+        data_received_for_request(request_id)
+      }.flatten.inject(0) { |bytes_sum, n| bytes_sum + n.encoded_data_length }
+    end
+
+    # The number of bytes downloaded for a particular resource type. If the
+    # resource was gzipped during transfer then the uncompressed size is
+    # reported.
+    #
+    # The HTTP headers for the response are included in the byte count.
+    #
+    # Possible resource types: 'Document','Script', 'Image', 'Stylesheet',
+    # 'Other'.
+    #
+    def bytes(resource_type)
+      @events.select {|e|
+        e.is_a?(ResponseReceived) && e.resource_type == resource_type
+      }.map { |e|
+        e.request_id
+      }.map { |request_id|
+        data_received_for_request(request_id)
+      }.flatten.inject(0) { |bytes_sum, n| bytes_sum + n.data_length }
     end
 
     # The number of network requests required to load this document
@@ -70,13 +97,23 @@ module ChromeDebugger
     # the number of network requests of a particular resource
     # type that were required to load this document
     #
-    # Possible resource types: 'Script', 'Image', 'Stylesheet'
+    # Possible resource types: 'Document', 'Script', 'Image', 'Stylesheet',
+    # 'Other'.
     #
     def request_count_by_resource(resource_type)
       @events.select {|n|
         n.is_a?(ResponseReceived) && n.resource_type == resource_type
       }.size
     end
+
+    private
+
+    def data_received_for_request(id)
+      @events.select { |e|
+        e.is_a?(DataReceived) && e.request_id == id
+      }
+    end
+
 
   end
 end

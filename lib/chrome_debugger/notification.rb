@@ -4,12 +4,16 @@ module ChromeDebugger
     attr_reader :method
 
     def initialize(point)
-      @params = point['params']
+      @params = point['params'] || {}
       @method = point['method']
     end
 
     def resource_type
-      @params['type'] if @params
+      @params['type']
+    end
+
+    def request_id
+      @params['requestId']
     end
 
   end
