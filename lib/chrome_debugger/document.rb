@@ -71,7 +71,7 @@ module ChromeDebugger
     # resource was gzipped during transfer then the uncompressed size is
     # reported.
     #
-    # The HTTP headers for the response are included in the byte count.
+    # The HTTP headers for the response are NOT included in the byte count.
     #
     # Possible resource types: 'Document','Script', 'Image', 'Stylesheet',
     # 'Other'.
