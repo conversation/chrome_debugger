@@ -45,3 +45,10 @@ Justin Morris
 
 James Healy
   james.healy@theconversation.edu.au
+
+## TODO
+
+Possible further work.
+
+* make the chrome path configurable
+* make headless mode configurable
