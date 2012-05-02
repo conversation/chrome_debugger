@@ -30,8 +30,8 @@ Chrome 18 or higher must be installed and available on the path.
       puts "image_payload:     #{document.encoded_bytes("Image")}"
     end
 
-Refer to the ChromeDebugger::Client and ChromeDebugger::Document for detailed
-docs.
+Refer to the ChromeDebugger::Client and ChromeDebugger::Document classes for
+detailed docs.
 
 ChromeDebugger::Client starts and manages a new chrome session.
 
