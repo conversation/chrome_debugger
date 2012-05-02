@@ -46,6 +46,11 @@ Justin Morris
 James Healy
   james.healy@theconversation.edu.au
 
+## Further Reading
+
+* https://developers.google.com/chrome-developer-tools/docs/remote-debugging
+* http://www.igvita.com/2012/04/09/driving-google-chrome-via-websocket-api/
+
 ## TODO
 
 Possible further work.
