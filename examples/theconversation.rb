@@ -1,9 +1,30 @@
-require 'chrome_debugger'
+# coding: utf-8
 
+# Demonstrates how we use ChromeDebugger at @ConversationEdu. We track various
+# performance metrics on key pages and send the results to Librato Metrics, a
+# hosted metrics platform.
+#
+# Usage:
+#
+#   LIBRATO_USER=someone@example.com LIBRATO_KEY=SECRET ruby theconversation.rb
+
+require 'chrome_debugger'
+require 'librato/metrics'
+
+# Config
+
+LIBRATO_PREFIX = "tc.frontend"
+LIBRATO_USER   = ENV["LIBRATO_USER"]
+LIBRATO_KEY    = ENV["LIBRATO_KEY"]
 PAGES          = {
   homepage: 'https://theconversation.edu.au/',
   articlepage: 'https://theconversation.edu.au/bike-lanes-economic-benefits-go-beyond-jobs-6081/'
 }
+
+# ACTION
+
+Librato::Metrics.authenticate(LIBRATO_USER, LIBRATO_KEY)
+librato_queue = Librato::Metrics::Queue.new
 
 PAGES.each do |name, url|
   ChromeDebugger::Client.open do |chrome|
@@ -26,7 +47,11 @@ PAGES.each do |name, url|
       image_count:          document.request_count_by_resource("Image"),
       stylesheet_count:     document.request_count_by_resource("Stylesheet")
     }.each {|key, value|
-      puts "#{name}.#{key}: #{value}"
+      puts "#{LIBRATO_PREFIX}.#{name}.#{key}: #{value}"
+    }.each { |key, value|
+      librato_queue.add("#{LIBRATO_PREFIX}.#{name}.#{key}" => value)
     }
   end
 end
+
+librato_queue.submit
