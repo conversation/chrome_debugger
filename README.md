@@ -50,13 +50,13 @@ a page load.
 
 ## Authors
 
-Justin Morris
-  justin.morris@theconversation.edu.au
-  [@plasticine](http://twitter.com/plasticine)
+### Justin Morris
+- justin.morris@theconversation.edu.au
+- [@plasticine](http://twitter.com/plasticine)
 
-James Healy
-  james.healy@theconversation.edu.au
-  [@jim_healy](http://twitter.com/jim_healy)
+### James Healy
+- james.healy@theconversation.edu.au
+- [@jim_healy](http://twitter.com/jim_healy)
 
 ## Further Reading
 
