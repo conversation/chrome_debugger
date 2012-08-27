@@ -8,6 +8,13 @@ Gem::Specification.new do |s|
   s.homepage          = "http://github.com/conversation/chrome_debugger"
   s.has_rdoc          = true
   s.rdoc_options      << "--title" << "Chrome Debugger" << "--line-numbers"
+
+  s.add_dependency('eventmachine')
+  s.add_dependency('faye')
+  s.add_dependency('headless')
+  s.add_dependency('librato-metrics')
+  s.add_dependency('yajl-ruby')
+
   s.files             = Dir.glob("{examples,lib}/**/*") + ["README.md", "CHANGELOG"]
   s.required_rubygems_version = ">=1.3.2"
   s.required_ruby_version = ">=1.9.2"
