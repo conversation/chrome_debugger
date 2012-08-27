@@ -17,28 +17,30 @@ Chrome 18 or higher must be installed and available on the path.
 
 ## Usage
 
-    require 'chrome_debugger'
+```ruby
+require 'chrome_debugger'
 
-    ChromeDebugger::Client.open do |chrome|
-      document = chrome.load_url("https://theconversation.edu.au/")
+ChromeDebugger::Client.open do |chrome|
+  document = chrome.load_url("https://theconversation.edu.au/")
 
-      puts "request count:                      #{document.request_count}"
-      puts "onload event fired:                 #{document.onload_event}"
-      puts "dom content event fired:            #{document.dom_content_event}"
-      puts "payload document encoded bytes:     #{document.encoded_bytes("Document")}"
-      puts "payload script encoded bytes:       #{document.encoded_bytes("Script")}"
-      puts "payload image encoded bytes:        #{document.encoded_bytes("Image")}"
-      puts "payload stylesheet encoded bytes:   #{document.encoded_bytes("Stylesheet")}"
-      puts "payload other encoded bytes:        #{document.encoded_bytes("Other")}"
-      puts "payload document bytes:             #{document.bytes("Document")}"
-      puts "payload script bytes:               #{document.bytes("Script")}"
-      puts "payload image bytes:                #{document.bytes("Image")}"
-      puts "payload stylesheet bytes:           #{document.bytes("Stylesheet")}"
-      puts "payload other bytes:                #{document.bytes("Other")}"
-      puts "script requests:                    #{document.request_count_by_resource("Script")}"
-      puts "image requests:                     #{document.request_count_by_resource("Image")}"
-      puts "stylesheet requests:                #{document.request_count_by_resource("Stylesheet")}"
-    end
+  puts "request count:                      #{document.request_count}"
+  puts "onload event fired:                 #{document.onload_event}"
+  puts "dom content event fired:            #{document.dom_content_event}"
+  puts "payload document encoded bytes:     #{document.encoded_bytes("Document")}"
+  puts "payload script encoded bytes:       #{document.encoded_bytes("Script")}"
+  puts "payload image encoded bytes:        #{document.encoded_bytes("Image")}"
+  puts "payload stylesheet encoded bytes:   #{document.encoded_bytes("Stylesheet")}"
+  puts "payload other encoded bytes:        #{document.encoded_bytes("Other")}"
+  puts "payload document bytes:             #{document.bytes("Document")}"
+  puts "payload script bytes:               #{document.bytes("Script")}"
+  puts "payload image bytes:                #{document.bytes("Image")}"
+  puts "payload stylesheet bytes:           #{document.bytes("Stylesheet")}"
+  puts "payload other bytes:                #{document.bytes("Other")}"
+  puts "script requests:                    #{document.request_count_by_resource("Script")}"
+  puts "image requests:                     #{document.request_count_by_resource("Image")}"
+  puts "stylesheet requests:                #{document.request_count_by_resource("Stylesheet")}"
+end
+```
 
 Refer to the `ChromeDebugger::Client` and `ChromeDebugger::Document` classes for
 detailed docs.
