@@ -36,7 +36,8 @@ module ChromeDebugger
 
     def start_chrome
       @profile_dir = File.join(Dir.tmpdir, SecureRandom.hex(10))
-      @chrome_cmd  = "'#{@chrome_path}' --user-data-dir=#{@profile_dir} -remote-debugging-port=#{REMOTE_DEBUGGING_PORT} --no-first-run"
+      @chrome_cmd  = "#{@chrome_path} --user-data-dir=#{@profile_dir} -remote-debugging-port=#{REMOTE_DEBUGGING_PORT} --no-first-run > /dev/null 2>&1"
+      puts @chrome_cmd
       @chrome_pid  = Process.spawn(@chrome_cmd, :pgroup => true)
 
       until debug_port_listening?
