@@ -40,12 +40,12 @@ Chrome 18 or higher must be installed and available on the path.
       puts "stylesheet requests:                #{document.request_count_by_resource("Stylesheet")}"
     end
 
-Refer to the ChromeDebugger::Client and ChromeDebugger::Document classes for
+Refer to the `ChromeDebugger::Client` and `ChromeDebugger::Document` classes for
 detailed docs.
 
-ChromeDebugger::Client starts and manages a new chrome session.
+`ChromeDebugger::Client` starts and manages a new chrome session.
 
-ChromeDebugger::Document provides an entry point for querying the results of
+`ChromeDebugger::Document` provides an entry point for querying the results of
 a page load.
 
 ## Authors
