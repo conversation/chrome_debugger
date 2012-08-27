@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = "chrome_debugger"
-  s.version           = "0.0.1"
+  s.version           = "0.0.2"
   s.summary           = "Remotely control Google Chrome and extract stats"
   s.description       = "Starts a Google Chrome session. Load pages and examine the results."
   s.authors           = ["Justin Morris","James Healy"]
