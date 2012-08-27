@@ -57,7 +57,7 @@ a page load.
 - [@plasticine](http://twitter.com/plasticine)
 
 ### James Healy
-- james.healy@theconversation.edu.au
+- james@yob.id.au
 - [@jim_healy](http://twitter.com/jim_healy)
 
 ## Further Reading
