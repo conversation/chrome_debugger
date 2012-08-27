@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name              = "chrome_debugger"
-  s.version           = "0.0.3"
+  s.version           = "0.0.4"
   s.summary           = "Remotely control Google Chrome and extract stats"
   s.description       = "Starts a Google Chrome session. Load pages and examine the results."
   s.authors           = ["Justin Morris","James Healy"]
-  s.email             = ["justin.morris@theconversation.edu.au","james.healy@theconversation.edu.au"]
+  s.email             = ["justin.morris@theconversation.edu.au","james@yob.id.au"]
   s.homepage          = "http://github.com/conversation/chrome_debugger"
   s.has_rdoc          = true
   s.rdoc_options      << "--title" << "Chrome Debugger" << "--line-numbers"
