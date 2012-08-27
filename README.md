@@ -71,3 +71,7 @@ Possible further work.
 
 * make the chrome path configurable
 * make headless mode configurable
+ 
+## License
+
+chrome_debugger is Copyright (c) 2012 The Conversation Media Group and distributed under the MIT license.
